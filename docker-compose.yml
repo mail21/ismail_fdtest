@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: my-laravel_app
+        restart: always
+        ports:
+            - "8000:80"
+        volumes:
+            - .:/var/www/html
+            - storage:/var/www/html/storage
+            - bootstrap_cache:/var/www/html/bootstrap/cache
+        depends_on:
+            - db
+
+    db:
+        image: postgres:13
+        container_name: laravel_db
+        restart: always
+        environment:
+            POSTGRES_USER: ismail
+            POSTGRES_PASSWORD: ismail
+            POSTGRES_DB: ismail_fdtest
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+
+volumes:
+    postgres_data:
+    storage:
+    bootstrap_cache:
