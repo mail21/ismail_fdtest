@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginUserController extends Controller
+class LoginController extends Controller
 {
     /**
      * Show the login form.

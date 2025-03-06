@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 
 class RegisteredUserController extends Controller
 {
@@ -28,9 +29,9 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user)); // Trigger email verification
+        // event(new Registered($user)); // Trigger email verification
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect("/home");
     }
 }

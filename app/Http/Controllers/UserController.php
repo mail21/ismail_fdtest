@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    // Menampilkan daftar pengguna
     public function index()
     {
         $users = User::all();
         return view('users.index', compact('users'));
     }
 
-    // Mencari pengguna berdasarkan nama atau email
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -24,7 +22,6 @@ class UserController extends Controller
         return view('users.index', compact('users'));
     }
 
-    // Filter pengguna berdasarkan status verifikasi email
     public function filter(Request $request)
     {
         $status = $request->input('status');

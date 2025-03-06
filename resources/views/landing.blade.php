@@ -16,16 +16,32 @@
         </div>
     </form>
 
-    <!-- Book List -->
-    <div class="space-y-4">
-        @foreach ($books as $book)
-            <div class="border p-4 rounded">
-                <h2 class="text-xl font-bold">{{ $book->title }}</h2>
-                <p>Author: {{ $book->author }}</p>
-                <p>Rating: {{ $book->rating }}</p>
-                <p>Uploaded: {{ $book->created_at->format('Y-m-d') }}</p>
-            </div>
-        @endforeach
+    <!-- Book Table -->
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="border border-gray-300 px-4 py-2">Title</th>
+                    <th class="border border-gray-300 px-4 py-2">Author</th>
+                    <th class="border border-gray-300 px-4 py-2">Rating</th>
+                    <th class="border border-gray-300 px-4 py-2">Uploaded</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($books as $book)
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">{{ $book->title }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ $book->author }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ $book->rating }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ $book->created_at->format('Y-m-d') }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="border border-gray-300 px-4 py-2 text-center">No books found</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 
     <!-- Pagination -->

@@ -3,6 +3,7 @@
         <a href="/" class="text-xl font-bold">Book Management</a>
         <div>
             @auth
+                <a href="{{ route('home') }}" class="mr-4">Home</a>
                 <a href="{{ route('books.index') }}" class="mr-4">Books</a>
                 <a href="{{ route('profile.edit') }}" class="mr-4">Profile</a>
                 <form action="{{ route('logout') }}" method="POST" class="inline">

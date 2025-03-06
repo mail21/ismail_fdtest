@@ -9,28 +9,52 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::where('user_id', auth()->id())->get();
+        // Start with all books
+        $books = Book::query();
+
+        // Filter by author
+        if ($request->filled('author')) {
+            $books->where('author', 'like', "%{$request->author}%");
+        }
+
+        // Filter by rating
+        if ($request->filled('rating')) {
+            $books->where('rating', '>=', $request->rating);
+        }
+
+        // Search by title
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $books->where('title', 'like', "%$search%");
+        }
+
+        // Paginate the results (5 items per page)
+        $books = $books->paginate(5);
+
         return view('books.index', compact('books'));
     }
 
     public function landing(Request $request)
     {
         $books = Book::query();
+        $request->validate([
+            'rating' => 'integer|min:1|max:5', // Example validation: rating must be an integer between 1 and 5
+        ]);
     
         // Filter by author
-        if ($request->has('author')) {
+        if ($request->filled('author')) {
             $books->where('author', 'like', "%{$request->author}%");
         }
     
         // Filter by rating
-        if ($request->has('rating')) {
-            $books->where('rating', '>=', $request->rating);
+        if ($request->filled('rating')) {
+            $books->where('rating', '=', $request->rating);
         }
     
         // Paginate results
-        $books = $books->paginate(10);
+        $books = $books->paginate(5);
         return view('landing', compact('books'));
     }
 
