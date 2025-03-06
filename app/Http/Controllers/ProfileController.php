@@ -26,40 +26,39 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        $user = Auth::user();
+        try {
+            $user = Auth::user();
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-        ]);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            ]);
 
-        $user->update($request->only('name', 'email'));
+            $user->update($request->only('name', 'email'));
 
-        return redirect()->route('profile.edit')->with('success', 'Profile updated successfully!');
+            return redirect()->route('profile.edit')->with('success', 'Profile updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('profile.edit')->with('error', 'Failed to update profile. Please try again.');
+        }
     }
 
     public function updatePassword(Request $request)
     {
-        $request->validate([
-            'password' => 'required|min:8|confirmed',
-            "current_password" => ['required', 'current_password'],
-        ]);
+        try {
+            $request->validate([
+                'password' => 'required|min:8|confirmed',
+                "current_password" => ['required', 'current_password'],
+            ]);
 
-        $user = Auth::user();
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
+            $user = Auth::user();
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
 
-        return redirect()->route('profile.edit')->with('success', 'Password updated successfully.');
-    }
-
-    public function forgotPassword(Request $request)
-    {
-        $request->validate(['email' => 'required|email|exists:users,email']);
-
-        Password::sendResetLink($request->only('email'));
-
-        return back()->with('success', 'Password reset link has been sent to your email.');
+            return redirect()->route('profile.edit')->with('success', 'Password updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('profile.edit')->with('error', 'Failed to update password. Please try again.');
+        }
     }
 
     /**
@@ -67,18 +66,23 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request)
     {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
+        try {
+            $request->validate([
+                'password' => ['required', 'current_password'],
+            ]);
 
-        $user = Auth::user();
-        Auth::logout();
-        $user->delete();
+            $user = Auth::user();
+            Auth::logout();
+            $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-        return redirect('/');
+            return redirect('/')->with('success', 'Account deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('profile.edit')->with('error', 'Failed to delete account. Please try again.');
+        }
     }
+
 
 }

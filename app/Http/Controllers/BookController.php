@@ -73,16 +73,20 @@ class BookController extends Controller
             'rating' => 'required|integer|between:1,5',
         ]);
 
-        Book::create([
-            'user_id' => auth()->id(),
-            'title' => $request->title,
-            'author' => $request->author,
-            'description' => $request->description,
-            'thumbnail' => $request->thumbnail,
-            'rating' => $request->rating,
-        ]);
+        try {
+            Book::create([
+                'user_id' => auth()->id(),
+                'title' => $request->title,
+                'author' => $request->author,
+                'description' => $request->description,
+                'thumbnail' => $request->thumbnail,
+                'rating' => $request->rating,
+            ]);
 
-        return redirect()->route('books.index')->with('success', 'Book added successfully!');
+            return redirect()->route('books.index')->with('success', 'Book added successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('books.index')->with('error', 'Failed to add book: ' . $e->getMessage());
+        }
     }
 
     public function edit(Book $book)
@@ -100,13 +104,22 @@ class BookController extends Controller
             'rating' => 'required|integer|between:1,5',
         ]);
 
-        $book->update($request->all());
-        return redirect()->route('books.index')->with('success', 'Book updated successfully!');
+        try {
+            $book->update($request->all());
+            return redirect()->route('books.index')->with('success', 'Book updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('books.index')->with('error', 'Failed to update book: ' . $e->getMessage());
+        }
     }
 
     public function destroy(Book $book)
     {
-        $book->delete();
-        return redirect()->route('books.index')->with('success', 'Book deleted successfully!');
+        try {
+            $book->delete();
+            return redirect()->route('books.index')->with('success', 'Book deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('books.index')->with('error', 'Failed to delete book: ' . $e->getMessage());
+        }
     }
+
 }

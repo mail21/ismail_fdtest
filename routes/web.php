@@ -22,7 +22,6 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
-    Route::post('/forgot-password', [ProfileController::class, 'forgotPassword'])->name('password.email');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
